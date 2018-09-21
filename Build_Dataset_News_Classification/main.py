@@ -5,26 +5,45 @@ from datetime import datetime
 
 
 LABEL_ID_MAP = {
+    "QC - Điện tử điện máy": 1,
     "Viễn thông": 2,
     "Du lịch": 6,
     "Giao thông": 6,
     "Giáo dục": 7,
+    "QC - Hàng tiêu dùng": 8,
     "Ẩm thực": 9,
-    "Y tế": 10,
     "Sức khỏe": 10,
-    "Làm đẹp": 11,
+    "QC - Làm đẹp": 11,
     "Thời trang": 12,
+    "QC - Thời trang": 12,
     "Bất động sản": 13,
-    "Nội thất": 14,
+    "Đồ dùng nội ngoại thất": 14,
     "Nhà": 14,
+    "Địa điểm kinh doanh": 15,
     "Xe": 16,
     "Tài chính": 17,
     "BHXH và cuộc sống": 17,
     "Pháp luật": 19,
+    "QC - Dịch vụ": 21,
+    "Game": 23,
     "Mẹ và bé": 24,
+    "Hàng không": 156,
     "Thể thao": 188
 
 }
+
+TEST_LABEL = [
+    "QC - Điện tử điện máy",
+    "QC - Hàng tiêu dùng",
+    "QC - Làm đẹp",
+    "Tài chính",
+    "Pháp luật",
+    "QC - Dịch vụ",
+    "Game",
+    "Mẹ và bé"
+]
+
+REMOVE_LABELS = [18, 20, 22]
 DATE_TIME_FMT = "%d-%m-%Y_%H-%M-%S"
 
 
@@ -57,9 +76,9 @@ def get_category_id(label):
 
 
 def filter_data(data):
-    data.dropna(subset=["time"], inplace=True)
+    # data.dropna(subset=["time"], inplace=True)
     data.fillna("", inplace=True)
-    data = data[:200]
+    data = data[:300]
     # t = datetime(year=2018, month=8, day=20)
     # data = data[data["time"] > t]
     return data
@@ -107,18 +126,22 @@ def build_new_data():
     test_data = []
 
     for path in paths:
+        print("Load data from ", path)
         data = load_csv(path)
         data = filter_data(data)
         data_size = int(len(data) / 2)
         # print(data.head())
-        training_data.extend(transform_data(data[:data_size]))
+        label = data.iloc[0]["category"]
+        if label not in TEST_LABEL:
+            # Label only to test
+            training_data.extend(transform_data(data[:data_size]))
         test_data.extend(transform_data(data[data_size:]))
 
     # Save data
-    train_save_path = "./Data/new_data_train_{}.json".format(len(training_data))
+    train_save_path = "./Data/Generate_Data/new_data_train_{}.json".format(len(training_data))
     save_json(training_data, train_save_path)
 
-    test_save_path = "./Data/new_data_test_{}.json".format(len(test_data))
+    test_save_path = "./Data/Generate_Data/new_data_test_{}.json".format(len(test_data))
     save_json(test_data, test_save_path)
 
     # data = pd.DataFrame.from_dict(transformed_data)
@@ -126,22 +149,34 @@ def build_new_data():
     # print(data["label"].value_counts())
 
 
-if __name__ == "__main__":
-    # file_path = "./Data/Merge_Data/new_data_train_5986.json"
-    # data = load_json(file_path)
-    # # data = pd.DataFrame(data)
-    # new_data = []
-    # remove_label = [18, 20, 22]
-    # for elm in data:
-    #     if elm["label"] not in remove_label:
-    #         new_data.append(elm)
-    #
-    # save_json(new_data, "./Data/Merge_Data/new_data_train_{}.json".format(len(new_data)))
+def remove_label(file_path, labels=REMOVE_LABELS):
+    data = load_json(file_path)
+    # data = pd.DataFrame(data)
+    new_data = []
+    remove_label = [18, 20, 22]
+    for elm in data:
+        if elm["label"] not in remove_label:
+            new_data.append(elm)
 
-    path = "./Data/Merge_Data/data_train_4386.json"
-    data = load_json(path)
-    data = pd.DataFrame(data)
-    data = data[data["label"] == 15]
-    print(data.head(10).values)
-    print("\n")
+    save_json(new_data, "./Data/Merge_Data/new_data_train_{}.json".format(len(new_data)))
+
+
+if __name__ == "__main__":
+    # build_new_data()
+    # merge_data()
+
+    file_path = "./Data/Merge_Data/json_train_new_v2.json"
+    remove_label(file_path)
+
+    # path = "./Data/Merge_Data/new_data_train_6786.json"
+    # data = load_json(path)
+    # data = pd.DataFrame(data)
+    # print(data["label"].value_counts())
+    # data = data[data["label"] == 1]
+    # print(data.head(2).values)
+    # print("\n")
     # print(data.tail(1).values)
+
+    # path = "./Data/Merge_Data/json_train_new_v2.json"
+    # data = load_json(path)
+    # print(len(data))
