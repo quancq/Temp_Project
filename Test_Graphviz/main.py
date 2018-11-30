@@ -56,7 +56,7 @@ def load_cats():
     return map_root_pairs, map_id_name
 
 
-if __name__ == "__main__":
+def generate_fig():
     map_root_pairs, map_id_name = load_cats()
 
     for root_id, pairs in map_root_pairs.items():
@@ -95,3 +95,15 @@ if __name__ == "__main__":
 
         check_call(['dot', '-Tjpg', save_dot_path, '-o', save_jpg_path, "-Grankdir=LR"])
 
+
+if __name__ == "__main__":
+    map_root_pairs, map_id_name = load_cats()
+
+    for root_id, pairs in map_root_pairs.items():
+        root_name = map_id_name.get(root_id)
+        print("\nRoot name : ", root_name)
+
+        A = PG.AGraph(directed=True, strict=True)
+
+        for parent_id, child_id in pairs:
+            pass
