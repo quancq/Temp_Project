@@ -1,0 +1,12 @@
+strict digraph "" {
+	"Du lịch & vận tải" -> "Du lịch";
+	"Du lịch & vận tải" -> "Vận tải";
+	"Du lịch" -> "Tour du lịch: inbound, out bound";
+	"Du lịch" -> "Dịch vụ lưu trú: biệt thự, khách sạn, nhà khách, nhà nghỉ, nhà trọ,...";
+	"Du lịch" -> "Dịch vụ du lịch khác";
+	"Vận tải" -> "Vận tải hàng hóa";
+	"Vận tải" -> "Vận tải hành khách";
+	"Vận tải hành khách" -> "Xe khách, tàu hỏa, taxi";
+	"Vận tải hành khách" -> "Tàu biển, du thuyền";
+	"Vận tải hành khách" -> "Hàng không: hãng hàng không, phòng vé,...";
+}

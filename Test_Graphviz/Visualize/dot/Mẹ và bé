@@ -1,0 +1,8 @@
+strict digraph "" {
+	"Mẹ và bé" -> "Thời trang - phụ kiện cho mẹ và bé";
+	"Mẹ và bé" -> "Đồ chơi cho bé";
+	"Mẹ và bé" -> "Vitamin, thuốc, thực phẩm chức năng cho mẹ và bé";
+	"Mẹ và bé" -> "Sữa và các chế phẩm từ sữa";
+	"Mẹ và bé" -> "Khóa học dành cho mẹ";
+	"Mẹ và bé" -> "Khóa học cho trẻ";
+}

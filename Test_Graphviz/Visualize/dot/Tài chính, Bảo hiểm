@@ -1,0 +1,7 @@
+strict digraph "" {
+	"Tài chính, Bảo hiểm" -> "Ngân hàng";
+	"Tài chính, Bảo hiểm" -> "Bảo hiểm";
+	"Tài chính, Bảo hiểm" -> "Chứng khoán";
+	"Tài chính, Bảo hiểm" -> "Dịch vụ tư vấn đầu tư, tài chính";
+	"Tài chính, Bảo hiểm" -> "Cho thuê tài chính";
+}

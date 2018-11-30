@@ -1,0 +1,5 @@
+strict digraph "" {
+	Game -> "Casual game";
+	Game -> Midcore;
+	Game -> Hardcore;
+}

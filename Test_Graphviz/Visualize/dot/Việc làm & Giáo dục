@@ -1,0 +1,15 @@
+strict digraph "" {
+	"Việc làm & Giáo dục" -> "Việc làm";
+	"Việc làm & Giáo dục" -> "Giáo dục";
+	"Giáo dục" -> "Giáo dục mầm non, tiểu học, trung học cơ sở, trung học phổ thông";
+	"Giáo dục" -> "Đào tạo trung cấp, cao đẳng, đại học, liên thông, sau ĐH";
+	"Giáo dục" -> "Đào tạo, huấn luyện kỹ năng sống, trại hè";
+	"Giáo dục" -> "Khóa học ngắn hạn: thiết kế, kế toán, tin học";
+	"Giáo dục" -> "Ngoại ngữ";
+	"Giáo dục" -> "Tư vấn du học/MBA";
+	"Giáo dục" -> "Giáo dục khác (sách, trang thiết bị giáo dục, ấn phẩm giáo dục,...)";
+	"Ngoại ngữ" -> "Tiếng Anh";
+	"Ngoại ngữ" -> "Tiếng Trung";
+	"Ngoại ngữ" -> "Tiếng Nhật";
+	"Ngoại ngữ" -> "Các ngoại ngữ khác";
+}
