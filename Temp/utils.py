@@ -52,8 +52,12 @@ def save_json(data, save_path, mode="w"):
 
 
 def load_csv(path):
-    data = pd.read_csv(path)
-    print("Read data (size = {}) from {} done".format(data.shape[0], path))
+    data = None
+    try:
+        data = pd.read_csv(path)
+        print("Read csv data (size = {}) from {} done".format(data.shape[0], path))
+    except:
+        print("Error when load csv data from ", path)
     return data
 
 
