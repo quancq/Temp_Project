@@ -1,0 +1,9 @@
+strict digraph "" {
+	"Dịch vụ (21)" -> "Tổ chức sự kiện (142)";
+	"Dịch vụ (21)" -> "Dịch vụ Quà Tặng (tư vấn, kinh doanh, chuyển phát quà tặng …) (143)";
+	"Dịch vụ (21)" -> "Dịch vụ cưới hỏi (144)";
+	"Dịch vụ (21)" -> "Giải trí (phim, chương trình ca nhạc, sự kiện....) (146)";
+	"Dịch vụ (21)" -> "Dịch vụ chụp ảnh (147)";
+	"Dịch vụ (21)" -> "Dịch vụ vệ sinh (149)";
+	"Dịch vụ (21)" -> "Dịch vụ khác (150)";
+}

@@ -1,7 +1,0 @@
-strict digraph "" {
-	"Ô tô - xe máy" -> "Ô tô";
-	"Ô tô - xe máy" -> "Xe máy";
-	"Ô tô - xe máy" -> "Xe đạp";
-	"Ô tô - xe máy" -> "Phụ tùng ô tô, xe máy, xe đạp";
-	"Ô tô - xe máy" -> "Dịch vụ sửa chữa, cứu hộ ô tô, xe máy";
-}

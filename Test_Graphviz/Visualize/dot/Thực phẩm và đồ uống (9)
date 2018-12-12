@@ -1,0 +1,19 @@
+strict digraph "" {
+	"Thực phẩm và đồ uống (9)" -> "Thực phẩm (46)";
+	"Thực phẩm và đồ uống (9)" -> "Sữa (48)";
+	"Thực phẩm và đồ uống (9)" -> "Đồ uống (49)";
+	"Thực phẩm (46)" -> "Ngũ cốc (50)";
+	"Thực phẩm (46)" -> "Rau củ quả (52)";
+	"Thực phẩm (46)" -> "Thịt cá tươi sống, hải sản tươi sống,… (53)";
+	"Thực phẩm (46)" -> "Bánh kẹo/ Đồ hộp, thực phẩm chế biến sẵn, ăn liền (182)";
+	"Thực phẩm (46)" -> "Đồ hộp (183)";
+	"Sữa (48)" -> "Sữa tươi (54)";
+	"Sữa (48)" -> "Sữa bột (56)";
+	"Sữa (48)" -> "Sữa bột dành cho trẻ em >12 tháng tuổi (58)";
+	"Sữa (48)" -> "Sữa bột dành cho người lớn (sữa canxi, sữa bột nói chung,…) (59)";
+	"Sữa (48)" -> "Các chế phẩm từ sữa như phô mai, váng sữa, sữa chua,… (60)";
+	"Đồ uống (49)" -> "Đồ uống có cồn: Bia, rượu … (61)";
+	"Đồ uống (49)" -> "Đồ uống không cồn: nước ngọt, nước tinh khiết, nước khoáng … (62)";
+	"Sữa bột (56)" -> "Sữa bột dành cho trẻ em >12 tháng tuổi (169)";
+	"Sữa bột (56)" -> "Sữa bột dành cho người lớn ( sữa canxi, sữa bột nói chung,…) (170)";
+}

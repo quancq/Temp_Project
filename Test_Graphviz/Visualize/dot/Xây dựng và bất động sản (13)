@@ -1,0 +1,12 @@
+strict digraph "" {
+	"Xây dựng và bất động sản (13)" -> "Xây dựng (85)";
+	"Xây dựng và bất động sản (13)" -> "Bất động sản (86)";
+	"Xây dựng (85)" -> "Thiết kế kiến trúc (88)";
+	"Xây dựng (85)" -> "Cung ứng vật tư, vật liệu xây dựng (89)";
+	"Xây dựng (85)" -> "Xây dựng nhà cửa, công trình... (90)";
+	"Xây dựng (85)" -> "Sản xuất vật tư, vật liệu xây dựng (91)";
+	"Xây dựng (85)" -> "Xây dựng khác (92)";
+	"Bất động sản (86)" -> "Chủ đầu tư, dự án BĐS (93)";
+	"Bất động sản (86)" -> "Sàn giao dịch và môi giới BĐS (95)";
+	"Bất động sản (86)" -> "Bất động sản khác (thuê, cho thuê bất động sản, mua bán bất động sản cá nhân) (97)";
+}

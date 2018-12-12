@@ -1,0 +1,5 @@
+strict digraph "" {
+	"Luật & chính phủ (19)" -> "Dịch vụ pháp luật : Tư vấn luật, công chứng, thừa phát lại … (123)";
+	"Luật & chính phủ (19)" -> "Tổ chức phi chính phủ, đại sứ quán (125)";
+	"Luật & chính phủ (19)" -> "Hoạt động của chính phủ: Chương trình hành động Quốc gia (126)";
+}

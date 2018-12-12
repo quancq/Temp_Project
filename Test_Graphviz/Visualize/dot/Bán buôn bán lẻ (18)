@@ -1,0 +1,6 @@
+strict digraph "" {
+	"Bán buôn bán lẻ (18)" -> "Trung tâm thương mại (118)";
+	"Bán buôn bán lẻ (18)" -> "Hệ thống siêu thị (119)";
+	"Bán buôn bán lẻ (18)" -> "Đại lý phân phối (120)";
+	"Bán buôn bán lẻ (18)" -> "Sàn Thương mại điện tử (122)";
+}

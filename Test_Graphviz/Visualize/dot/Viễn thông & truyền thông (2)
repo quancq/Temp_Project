@@ -1,0 +1,12 @@
+strict digraph "" {
+	"Viễn thông & truyền thông (2)" -> "Viễn thông (35)";
+	"Viễn thông & truyền thông (2)" -> "Truyền thông (36)";
+	"Viễn thông & truyền thông (2)" -> "Viễn thông và truyền thông khác: phần mềm quản lý,... (37)";
+	"Viễn thông (35)" -> "Dịch vụ viễn thông: Internet, điện thoại, truyền hình (107)";
+	"Viễn thông (35)" -> "Hoạt động xử lý dữ liệu, cho thuê hosting và các hoạt động liên quan (110)";
+	"Truyền thông (36)" -> "Kênh truyền hình (116)";
+	"Truyền thông (36)" -> "Kênh phát thanh (121)";
+	"Truyền thông (36)" -> "Báo chí, tạp chí (124)";
+	"Truyền thông (36)" -> "Dịch vụ internet: dịch vụ website, trang tin điện tử (128)";
+	"Truyền thông (36)" -> "Ấn phẩm khác: băng đĩa, in ấn (131)";
+}

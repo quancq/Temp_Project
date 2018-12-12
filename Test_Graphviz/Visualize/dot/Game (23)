@@ -1,0 +1,5 @@
+strict digraph "" {
+	"Game (23)" -> "Casual game (159)";
+	"Game (23)" -> "Midcore (160)";
+	"Game (23)" -> "Hardcore (161)";
+}

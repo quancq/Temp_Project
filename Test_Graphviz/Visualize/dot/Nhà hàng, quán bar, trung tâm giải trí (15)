@@ -1,0 +1,5 @@
+strict digraph "" {
+	"Nhà hàng, quán bar, trung tâm giải trí (15)" -> "Nhà hàng & Quán ăn (101)";
+	"Nhà hàng, quán bar, trung tâm giải trí (15)" -> "Quán bar & Café (102)";
+	"Nhà hàng, quán bar, trung tâm giải trí (15)" -> "Trung tâm giải trí (công viên, rạp chiếu phim, khu vui chơi...) (104)";
+}

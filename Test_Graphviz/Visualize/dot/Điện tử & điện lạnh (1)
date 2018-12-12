@@ -1,0 +1,24 @@
+strict digraph "" {
+	"Điện tử & điện lạnh (1)" -> "Điện tử (3)";
+	"Điện tử & điện lạnh (1)" -> "Điện lạnh (5)";
+	"Điện tử & điện lạnh (1)" -> "Điện gia dụng (33)";
+	"Điện tử & điện lạnh (1)" -> "Máy văn phòng (34)";
+	"Điện tử & điện lạnh (1)" -> "Điện tử và điện lạnh khác (103)";
+	"Điện tử (3)" -> "Máy tính/laptop/máy tính bảng (4)";
+	"Điện tử (3)" -> "Điện thoại di động/ Điện thoại cố định/ Bộ đàm (25)";
+	"Điện tử (3)" -> "Máy ảnh/ Máy quay (26)";
+	"Điện tử (3)" -> "Tivi/ Màn hình LCD/Dàn audio/Loa/Đầu KTS (27)";
+	"Điện tử (3)" -> "Linh kiện, phụ kiện thiết bị kỹ thuật số (28)";
+	"Điện lạnh (5)" -> "Tủ lạnh/Máy lọc nước (29)";
+	"Điện lạnh (5)" -> "Máy giặt/Máy sấy quần áo/Máy hút bụi (30)";
+	"Điện lạnh (5)" -> "Điều hòa/ Bình nóng lạnh (31)";
+	"Điện lạnh (5)" -> "Máy phát điện/Bộ lưu điện/Ắc quy (32)";
+	"Điện gia dụng (33)" -> "Radio/Cassette/Máy nghe nhạc (55)";
+	"Điện gia dụng (33)" -> "Đèn điện/Bếp điện/Bàn là (57)";
+	"Điện gia dụng (33)" -> "Máy hút/Máy lọc/Máy xay/ Máy vắt/Máy ép,... (82)";
+	"Điện gia dụng (33)" -> "Quạt (hơi nước, tích điện, cây, bàn,...) Lò sưởi, quạt sưởi, đèn sưởi,... (87)";
+	"Điện gia dụng (33)" -> "Dụng cụ điện: máy khoan, xịt áp lực, máy cắt, máy mài, máy bào (181)";
+	"Máy văn phòng (34)" -> "Máy in/Máy photocopy/Máy fax/Máy đếm tiền/Máy chấm công/Máy hủy tài liệu/Máy scan (94)";
+	"Máy văn phòng (34)" -> "Máy chiếu, màn chiếu (96)";
+	"Máy văn phòng (34)" -> "Điện tử và điện lạnh khác (98)";
+}
