@@ -1,0 +1,13 @@
+strict digraph "" {
+	"Thời trang & trang sức (12)" -> "Thời trang & phụ kiện (73)";
+	"Thời trang & trang sức (12)" -> "Trang sức (74)";
+	"Thời trang & phụ kiện (73)" -> "Trang phục (75)";
+	"Thời trang & phụ kiện (73)" -> "Giày dép (78)";
+	"Thời trang & phụ kiện (73)" -> "Túi xách, Ba lô, Valy (81)";
+	"Thời trang & phụ kiện (73)" -> "Đồng hồ (83)";
+	"Thời trang & phụ kiện (73)" -> "Phụ kiện khác (dây lưng, ví da,…) (84)";
+	"Trang phục (75)" -> "Trang phục nữ (76)";
+	"Trang phục (75)" -> "Trang phục nam (77)";
+	"Giày dép (78)" -> "Giày dép nữ (79)";
+	"Giày dép (78)" -> "Giày dép nam (80)";
+}

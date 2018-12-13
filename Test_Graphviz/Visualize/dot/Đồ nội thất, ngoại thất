@@ -1,6 +1,0 @@
-strict digraph "" {
-	"Đồ nội thất, ngoại thất" -> "Nội thất (đồ dùng nội thất)";
-	"Đồ nội thất, ngoại thất" -> "Ngoại thất (sân vườn, cảnh quan,..)";
-	"Nội thất (đồ dùng nội thất)" -> "Giường, tủ, bàn ghế/ Vòi sen, bồn rửa...";
-	"Nội thất (đồ dùng nội thất)" -> "Chăn, ga, gối, đệm";
-}

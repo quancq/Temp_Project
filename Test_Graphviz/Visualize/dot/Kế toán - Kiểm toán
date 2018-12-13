@@ -1,4 +1,0 @@
-strict digraph "" {
-	"Kế toán - Kiểm toán" -> "Kế toán";
-	"Kế toán - Kiểm toán" -> "Kiểm toán";
-}

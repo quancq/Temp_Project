@@ -2,6 +2,8 @@ import os
 import json
 import pandas as pd
 import numpy as np
+from datetime import datetime
+DEFAULT_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 class MyEncoder(json.JSONEncoder):
@@ -16,6 +18,26 @@ class MyEncoder(json.JSONEncoder):
             return super(MyEncoder, self).default(obj)
 
 
+def get_time_str(time=datetime.now(), fmt=DEFAULT_TIME_FORMAT):
+    try:
+        return time.strftime(fmt)
+    except:
+        return ""
+
+
+def get_time_obj(time_str, fmt=DEFAULT_TIME_FORMAT):
+    try:
+        return datetime.strptime(time_str, fmt)
+    except:
+        return None
+
+
+def transform_time_fmt(time_str, src_fmt, dst_fmt=DEFAULT_TIME_FORMAT):
+    time_obj = get_time_obj(time_str, src_fmt)
+    time_str = get_time_str(time_obj, dst_fmt)
+    return time_str
+
+
 def mkdirs(dir):
     if not os.path.exists(dir):
         os.makedirs(dir)
@@ -24,6 +46,16 @@ def mkdirs(dir):
 def make_parent_dirs(path):
     dir = path[:path.rfind("/")]
     mkdirs(dir)
+
+
+def get_all_file_paths(dir):
+    file_paths = []
+    for root, dirs, files in os.walk(dir):
+        # print(files)
+        files = [os.path.join(root, file) for file in files]
+        file_paths.extend(files)
+
+    return file_paths
 
 
 def save_csv(df, save_path):

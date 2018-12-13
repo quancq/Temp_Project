@@ -1,7 +1,0 @@
-strict digraph "" {
-	"Chăm sóc sắc đẹp" -> "Spa, Massage";
-	"Chăm sóc sắc đẹp" -> "Dịch vụ thể dục, thể thao thẩm mỹ";
-	"Chăm sóc sắc đẹp" -> "Beauty salon";
-	"Chăm sóc sắc đẹp" -> "Thẩm mỹ viện/ Dịch vụ thẩm mỹ";
-	"Chăm sóc sắc đẹp" -> "Dụng cụ thể dục, thể thao/ Dụng cụ chăm sóc sắc đẹp";
-}

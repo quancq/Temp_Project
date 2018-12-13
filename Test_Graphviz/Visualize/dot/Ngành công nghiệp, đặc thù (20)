@@ -1,0 +1,15 @@
+strict digraph "" {
+	"Ngành công nghiệp, đặc thù (20)" -> "Điện (vật tư thiết bị điện công nghiệp) (127)";
+	"Ngành công nghiệp, đặc thù (20)" -> "Hóa chất (hóa chất công nghiệp, chế phẩm môi trường) (129)";
+	"Ngành công nghiệp, đặc thù (20)" -> "Năng lượng (Gas, xăng, dầu …) (130)";
+	"Ngành công nghiệp, đặc thù (20)" -> "Sản phẩm công nghiệp (132)";
+	"Ngành công nghiệp, đặc thù (20)" -> "Khoa học và công nghệ (133)";
+	"Ngành công nghiệp, đặc thù (20)" -> "Máy công nghiệp (134)";
+	"Ngành công nghiệp, đặc thù (20)" -> "In ấn và các sản phẩm phụ trợ (135)";
+	"Ngành công nghiệp, đặc thù (20)" -> "Dịch vụ chuyển phát bưu chính (136)";
+	"Ngành công nghiệp, đặc thù (20)" -> "Sản phẩm Nông nghiệp (137)";
+	"Ngành công nghiệp, đặc thù (20)" -> "Sản phẩm Lâm nghiệp (138)";
+	"Ngành công nghiệp, đặc thù (20)" -> "Sản phẩm Thủy sản (139)";
+	"Ngành công nghiệp, đặc thù (20)" -> "Ngành khác (140)";
+	"Ngành công nghiệp, đặc thù (20)" -> "Hội chợ, triển lãm, sự kiện, hội nghị (141)";
+}

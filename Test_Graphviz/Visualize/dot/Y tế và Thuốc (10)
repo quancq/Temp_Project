@@ -1,0 +1,8 @@
+strict digraph "" {
+	"Y tế và Thuốc (10)" -> "Dược phẩm (63)";
+	"Y tế và Thuốc (10)" -> "Y tế & Thiết bị y tế (64)";
+	"Dược phẩm (63)" -> "Thuốc chữa bệnh (65)";
+	"Dược phẩm (63)" -> "Thực phẩm chức năng (66)";
+	"Y tế & Thiết bị y tế (64)" -> "Khám chữa bệnh (Bệnh viện, phòng khám, dịch vụ y tế...) (67)";
+	"Y tế & Thiết bị y tế (64)" -> "Thiết bị y tế (68)";
+}

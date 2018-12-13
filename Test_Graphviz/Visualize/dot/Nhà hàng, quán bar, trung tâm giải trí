@@ -1,5 +1,0 @@
-strict digraph "" {
-	"Nhà hàng, quán bar, trung tâm giải trí" -> "Nhà hàng & Quán ăn";
-	"Nhà hàng, quán bar, trung tâm giải trí" -> "Quán bar & Café";
-	"Nhà hàng, quán bar, trung tâm giải trí" -> "Trung tâm giải trí (công viên, rạp chiếu phim, khu vui chơi...)";
-}

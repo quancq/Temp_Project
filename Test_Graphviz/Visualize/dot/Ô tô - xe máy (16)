@@ -1,0 +1,7 @@
+strict digraph "" {
+	"Ô tô - xe máy (16)" -> "Ô tô (105)";
+	"Ô tô - xe máy (16)" -> "Xe máy (106)";
+	"Ô tô - xe máy (16)" -> "Xe đạp (108)";
+	"Ô tô - xe máy (16)" -> "Phụ tùng ô tô, xe máy, xe đạp (109)";
+	"Ô tô - xe máy (16)" -> "Dịch vụ sửa chữa, cứu hộ ô tô, xe máy (111)";
+}

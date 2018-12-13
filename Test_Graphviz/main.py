@@ -22,7 +22,7 @@ def load_cats():
         cat_id = row["cat_id"]
         cat_name = row["cat_name"]
         parent_id = row["parent_id"]
-        map_id_name.update({cat_id: cat_name})
+        map_id_name.update({cat_id: "{} ({})".format(cat_name, cat_id)})
         parent_childs.append((parent_id, cat_id))
         map_child_parent.update({cat_id: parent_id})
 
@@ -97,13 +97,16 @@ def generate_fig():
 
 
 if __name__ == "__main__":
-    map_root_pairs, map_id_name = load_cats()
+    pass
+    # map_root_pairs, map_id_name = load_cats()
+    #
+    # for root_id, pairs in map_root_pairs.items():
+    #     root_name = map_id_name.get(root_id)
+    #     print("\nRoot name : ", root_name)
+    #
+    #     A = PG.AGraph(directed=True, strict=True)
+    #
+    #     for parent_id, child_id in pairs:
+    #         pass
 
-    for root_id, pairs in map_root_pairs.items():
-        root_name = map_id_name.get(root_id)
-        print("\nRoot name : ", root_name)
-
-        A = PG.AGraph(directed=True, strict=True)
-
-        for parent_id, child_id in pairs:
-            pass
+    generate_fig()

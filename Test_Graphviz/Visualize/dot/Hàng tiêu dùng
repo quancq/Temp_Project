@@ -1,8 +1,0 @@
-strict digraph "" {
-	"Hàng tiêu dùng" -> "Hóa phẩm: Xà phòng giặt, xà phòng tắm, nước xả vải, nước rửa chén, dung dịch tẩy rửa,...";
-	"Hàng tiêu dùng" -> "Đồ gia dụng: Bát, đĩa, thìa, dĩa, cốc, chén, ấm nước,...";
-	"Hàng tiêu dùng" -> "Hóa mỹ phẩm: dầu gội, sữa tắm, nước hoa, kem đánh răng, mỹ phẩm khác,...";
-	"Hàng tiêu dùng" -> "Đồ dùng sinh hoạt: giấy vệ sinh, tampon, bvs,...";
-	"Hàng tiêu dùng" -> "Văn phòng phẩm";
-	"Hàng tiêu dùng" -> "Hàng tiêu dùng khác";
-}
