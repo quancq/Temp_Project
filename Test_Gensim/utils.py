@@ -127,7 +127,7 @@ def load_csvs(paths):
         df.append(load_csv(path))
 
     df = pd.concat(df, ignore_index=True, sort=False)
-    print("Load {} files (size={}) csv from {} done".format(len(paths), df.shape[0], dir))
+    print("Load {} files (size={}) csv done".format(len(paths), df.shape[0]))
     return df
 
 
