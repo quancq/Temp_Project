@@ -51,7 +51,8 @@ def train_word2vec(model_name="Word2Vec"):
     new_model = Word2Vec.load(save_path)
     print(new_model)
 
-    words = ["Galaxy Note 9", "Dell Vostro X240", "Casio X8A0", "Honda XS99", "Pho mai Con bò cười",
+    words = ["Galaxy Note 9", "Dell Vostro X240", "Đồng hồ nam cá tính", "Honda XS99",
+             "Máy giặt tự động Sam sung", "Xe máy sành điệu Honda X2AB",
              "Cà phê Trung Nguyên đóng hộp", "Sữa tươi khuyến mại Mộc Châu"]
     for word in words:
         print("\nWord: ", word)
