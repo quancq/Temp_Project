@@ -42,6 +42,9 @@ def test():
     #     "LG",
     #     "Hitachi",
     #     "Toshiba",
+    #     "Galaxy Note 11",
+    #     "Điện thoại Sam sung Galaxy",
+    #     "Máy tính bảng Galaxy Tab",
     # ]
 
     product_name = "Điện thoại Samsung Galaxy A7 (2018) SM-A750G Black"
