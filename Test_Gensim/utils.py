@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 import math
+from sklearn.externals import joblib
 
 DEFAULT_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -161,6 +162,20 @@ def sort_coo(m, axis=0):
 
     tuples = zip(m.row, m.col, m.data)
     return sorted(tuples, key=lambda x: (x[axis], x[2]), reverse=True)
+
+
+def save_sklearn_model(model, save_path):
+    make_parent_dirs(save_path)
+    joblib.dump(model, save_path)
+    print("Save sklearn model to {} done".format(save_path))
+
+
+def load_sklearn_model(path):
+    try:
+        return joblib.load(path)
+    except:
+        print("Error when load sklearn model from ", path)
+        return None
 
 
 if __name__ == "__main__":
