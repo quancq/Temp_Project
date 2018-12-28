@@ -39,6 +39,9 @@ def test():
         "LG",
         "Hitachi",
         "Toshiba",
+        "Galaxy Note 11",
+        "Điện thoại Sam sung Galaxy",
+        "Máy tính bảng Galaxy Tab",
     ]
     result = []
 
