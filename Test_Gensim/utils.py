@@ -178,5 +178,15 @@ def load_sklearn_model(path):
         return None
 
 
+def get_ngram(tokens, ngram=3, min_ngram=1, max_ngram=5, step=2):
+    if ngram is not None and ngram > 0:
+        result = [tokens[i: i+ngram] for i in range(0, len(tokens) - ngram + 1, step)]
+    else:
+        result = [tokens[i: i+ngram] for ngram in range(min_ngram, max_ngram+1)
+                  for i in range(0, len(tokens) - ngram + 1, step)]
+
+    return result
+
+
 if __name__ == "__main__":
     pass
