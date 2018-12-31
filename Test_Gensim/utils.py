@@ -178,14 +178,21 @@ def load_sklearn_model(path):
         return None
 
 
-def get_ngram(tokens, ngram=3, min_ngram=1, max_ngram=5, step=2):
+def get_ngram(tokens, ngram=None, min_ngram=1, max_ngram=5, step=2):
     if ngram is not None and ngram > 0:
-        result = [tokens[i: i+ngram] for i in range(0, len(tokens) - ngram + 1, step)]
+        result = [(i, tokens[i: i+ngram]) for i in range(0, len(tokens) - ngram + 1, step)]
     else:
-        result = [tokens[i: i+ngram] for ngram in range(min_ngram, max_ngram+1)
+        result = [(i, tokens[i: i+ngram]) for ngram in range(min_ngram, max_ngram+1)
                   for i in range(0, len(tokens) - ngram + 1, step)]
 
     return result
+
+
+def is_separate(start1, end1, start2, end2):
+    if end2 < start1 or start2 > end2:
+        return True
+    else:
+        return False
 
 
 if __name__ == "__main__":

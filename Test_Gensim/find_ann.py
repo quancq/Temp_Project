@@ -49,30 +49,64 @@ def find_ann_word_vectors():
     index.createIndex({"post": 2}, print_progress=True)
 
     result_names = []
-    for i, doc in enumerate(test_docs):
+    for doc_idx, doc in enumerate(test_docs):
         names_of_doc = []
         tokens = doc.split(" ")
-        ngram = utils.get_ngram(tokens, ngram=5, step=7)
+        ngram = utils.get_ngram(tokens, min_ngram=3, max_ngram=6, step=1)
         print("\nNumber tokens : {}, Number grams : {}".format(len(tokens), len(ngram)))
-        for gram in ngram:
+        for gram_idx, gram in ngram:
+            if "." in gram:
+                continue
             candidate_name = " ".join(gram)
             if candidate_name not in names_of_doc:
                 # candidate_name = "Tủ_lạnh Hitachi 455L"
                 # most_sim_product_name = word_vectors.most_similar_to_given(candidate_name, product_names)
                 # sim = word_vectors.similarity(candidate_name, most_sim_product_name)
 
-                candidate_vector = word_vectors[candidate_name]
-                ids, distances = index.knnQuery(candidate_vector, k=10)
-                max_id = np.argmin(distances)
-                sim = 1 - distances[max_id]
-                most_sim_product_name = product_names[ids[max_id]]
+                try:
+                    candidate_vector = word_vectors[candidate_name]
+                    ids, distances = index.knnQuery(candidate_vector, k=10)
+                    max_id = np.argmin(distances)
+                    sim = 1 - distances[max_id]
+                    most_sim_product_name = product_names[ids[max_id]]
 
-                if sim > 0.7:
-                    names_of_doc.append(candidate_name)
-                    print("Select Candidate_Name : {}, Product_Name : {} (id={})\n Similarity : {}\n".
-                          format(candidate_name, most_sim_product_name, max_id, sim))
-        result_names.append(",".join(names_of_doc))
-        print("Extract {}/{} docs done".format(i+1, len(test_docs)))
+                    if sim > 0.9:
+                        names_of_doc.append((gram_idx, candidate_name, sim))
+                        # print("Select Candidate_Name : {}, Product_Name : {} (id={})\n Similarity : {}\n".
+                        #       format(candidate_name, most_sim_product_name, max_id, sim))
+                except:
+                    pass
+        # Select best names in candidate names
+        best_names_of_doc = []
+        top_names = 3
+        for _ in range(top_names):
+            best_idx = -1
+            max_score = 0
+            best_name = None
+            for candidate_idx, candidate_name, score in names_of_doc:
+                if score > max_score:
+                    is_valid = True
+                    for sel_idx, _, selected_name in best_names_of_doc:
+                        start1, end1 = sel_idx, sel_idx + len(selected_name.split(" "))
+                        start2, end2 = candidate_idx, candidate_idx + len(candidate_name.split(" "))
+                        if not utils.is_separate(start1, end1, start2, end2):
+                            is_valid = False
+                            break
+                    if is_valid:
+                        best_idx = candidate_idx
+                        max_score = score
+                        best_name = candidate_name
+
+            if best_name is not None:
+                best_names_of_doc.append((best_idx, max_score, best_name))
+
+        result_names_of_doc = []
+        for idx, score, name in best_names_of_doc:
+            result_names_of_doc.append(name)
+            print("Select Candidate_Name : {} - Similarity : {}\n".format(name, score))
+        result_names.append(",".join(result_names_of_doc))
+
+        print("Extract {}/{} docs done".format(doc_idx+1, len(test_docs)))
 
     df = pd.DataFrame(dict(Documents=test_docs, True_Name=test_product_names, Pred_Name=result_names))
     df = df[["Documents", "True_Name", "Pred_Name"]]
