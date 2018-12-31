@@ -10,10 +10,10 @@ from sklearn.neighbors import KNeighborsClassifier
 
 
 def save_word_vectors():
-    we_model_path = "./Model/model_FastText_16000.bin"
+    we_model_path = "./Model/FastText/model_FastText_16000.bin"
     we_model = FastText.load(we_model_path)
     word_vectors = we_model.wv
-    wv_path = "./Model/FastText_vectors_{}.bin".format(len(word_vectors.vocab))
+    wv_path = "./Model/FastText/FastText_vectors_{}.bin".format(len(word_vectors.vocab))
     word_vectors.save(wv_path)
 
 
@@ -26,20 +26,30 @@ def load_products():
 
 
 def load_test_df():
-    dataset_path = "./Dataset/Preprocess/Test/dataset_17.csv"
+    dataset_path = "./Dataset/Preprocess/Test/dataset_17_hard.csv"
     df = utils.load_csv(dataset_path)
     return df
 
 
 def find_ann_word_vectors():
-    wv_path = "./Model/FastText_vectors_39463.bin"
-    word_vectors = FastTextKeyedVectors.load(wv_path)
-    print(word_vectors)
+    model_path = "./Model/FastText/model_FastText_16000_20.bin"
+    model = FastText.load(model_path)
+
+
+    # wv_path = "./Model/FastText/FastText_vectors_39463_20.bin"
+    # word_vectors = FastTextKeyedVectors.load(wv_path)
+    # print(word_vectors)
 
     categories, product_names = load_products()
     test_df = load_test_df()[:100]
     test_docs = test_df["Info"].values.tolist()
+
+    tokenized_docs = [doc.split(" ") for doc in test_docs]
+    model.build_vocab(tokenized_docs, update=True)
+    model.train(tokenized_docs, total_examples=len(test_docs), epochs=10)
+
     test_product_names = test_df["Model"].values.tolist()
+    word_vectors = model.wv
     product_name_vectors = word_vectors[product_names]
 
     start_time = time.time()
@@ -78,7 +88,7 @@ def find_ann_word_vectors():
                     pass
         # Select best names in candidate names
         best_names_of_doc = []
-        top_names = 3
+        top_names = len(names_of_doc)
         for _ in range(top_names):
             best_idx = -1
             max_score = 0
@@ -99,6 +109,8 @@ def find_ann_word_vectors():
 
             if best_name is not None:
                 best_names_of_doc.append((best_idx, max_score, best_name))
+            else:
+                break
 
         result_names_of_doc = []
         for idx, score, name in best_names_of_doc:
@@ -110,7 +122,7 @@ def find_ann_word_vectors():
 
     df = pd.DataFrame(dict(Documents=test_docs, True_Name=test_product_names, Pred_Name=result_names))
     df = df[["Documents", "True_Name", "Pred_Name"]]
-    save_result_path = "./Result/test_find_ann.csv"
+    save_result_path = "./Result/test_find_ann_hard.csv"
     utils.save_csv(df, save_result_path)
 
     exec_time = time.time() - start_time

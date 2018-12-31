@@ -73,5 +73,19 @@ def test():
     print("Time : {:.2f} seconds".format(exec_time))
 
 
+def test_predict_by_context():
+    save_path = "./Model/Word2Vec/model_Word2Vec_16000_20.bin"
+    model = Word2Vec.load(save_path)
+    print(model)
+
+    context = ["Thông tin", "máy giặt", "lồng ngang", "công nghệ"]
+
+    result = model.predict_output_word(context)
+    result.sort(key=lambda x: x[1], reverse=True)
+    for word, score in result:
+        print("{} - {}".format(word, score))
+
+
 if __name__ == "__main__":
-    test()
+    # test()
+    test_predict_by_context()

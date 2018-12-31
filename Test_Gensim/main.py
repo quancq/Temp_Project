@@ -22,10 +22,10 @@ def train_word2vec(model_name="Word2Vec"):
     start_time = time.time()
 
     if model_name == "Word2Vec":
-        model = Word2Vec(sentences=train_docs, size=100, window=5, min_count=3, workers=4)
+        model = Word2Vec(sentences=train_docs, size=100, window=5, min_count=3, workers=4, iter=20)
         # model.train(sentences=train_docs, total_examples=len(train_docs), epochs=100)
     elif model_name == "FastText":
-        model = FastText(sentences=train_docs, size=100, window=5, min_count=3, workers=4)
+        model = FastText(sentences=train_docs, size=100, window=5, min_count=3, workers=4, iter=20)
         # model.train(sentences=train_docs, total_examples=len(train_docs), epochs=100)
         # model = FT_Wrapper.train(ft_path="/home/quancq/Program/fastText-0.1.0/fasttext",
         #                        corpus_file="./Dataset/Preprocess/Train/dataset_1.csv")
@@ -45,8 +45,13 @@ def train_word2vec(model_name="Word2Vec"):
     print("Vocab size : ", len(words))
 
     # save model
-    save_path = "./Model/model_{}_{}.bin".format(model_name, len(train_docs))
+    save_path = "./Model/{}/model_{}_{}_{}.bin".format(model_name, model_name, len(train_docs), model.iter)
     model.save(save_path)
+
+    word_vectors = model.wv
+    wv_path = "./Model/{}/{}_vectors_{}_{}.bin".format(model_name, model_name, len(word_vectors.vocab), model.iter)
+    word_vectors.save(wv_path)
+
     # load model
     new_model = Word2Vec.load(save_path)
     print(new_model)
@@ -63,8 +68,8 @@ def train_word2vec(model_name="Word2Vec"):
 
 
 if __name__ == "__main__":
-    model_name = "FastText"
-    # model_name = "Word2Vec"
+    # model_name = "FastText"
+    model_name = "Word2Vec"
     train_word2vec(model_name=model_name)
 
     # # print(train_docs)
