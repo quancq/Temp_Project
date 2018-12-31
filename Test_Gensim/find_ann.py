@@ -22,7 +22,7 @@ def load_products():
     dataset_dir = "./Dataset/Preprocess/Train"
     dataset_paths = utils.get_file_paths(dataset_dir)
     df = utils.load_csvs(dataset_paths)
-    return df["Root Id"].values, df["Model"].values
+    return df["Root Id"].values, df["Model"].values, df["Info"].values.tolist()
 
 
 def load_test_df():
@@ -32,21 +32,23 @@ def load_test_df():
 
 
 def find_ann_word_vectors():
-    model_path = "./Model/FastText/model_FastText_16000_20.bin"
-    model = FastText.load(model_path)
-
+    # model_path = "./Model/FastText/model_FastText_16000_20.bin"
+    # model = FastText.load(model_path)
+    model = FastText(window=5, min_count=3)
 
     # wv_path = "./Model/FastText/FastText_vectors_39463_20.bin"
     # word_vectors = FastTextKeyedVectors.load(wv_path)
     # print(word_vectors)
 
-    categories, product_names = load_products()
+    categories, product_names, train_docs = load_products()
     test_df = load_test_df()[:100]
     test_docs = test_df["Info"].values.tolist()
 
     tokenized_docs = [doc.split(" ") for doc in test_docs]
-    model.build_vocab(tokenized_docs, update=True)
-    model.train(tokenized_docs, total_examples=len(test_docs), epochs=10)
+    tokenized_docs.extend([doc.split(" ") for doc in train_docs])
+    model.build_vocab(tokenized_docs, update=False)
+    print("Start training ...")
+    model.train(tokenized_docs, total_examples=len(tokenized_docs), epochs=20)
 
     test_product_names = test_df["Model"].values.tolist()
     word_vectors = model.wv
@@ -80,7 +82,7 @@ def find_ann_word_vectors():
                     sim = 1 - distances[max_id]
                     most_sim_product_name = product_names[ids[max_id]]
 
-                    if sim > 0.9:
+                    if sim > 0.7:
                         names_of_doc.append((gram_idx, candidate_name, sim))
                         # print("Select Candidate_Name : {}, Product_Name : {} (id={})\n Similarity : {}\n".
                         #       format(candidate_name, most_sim_product_name, max_id, sim))
