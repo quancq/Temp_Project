@@ -8,7 +8,7 @@ import time
 import os
 
 
-def train_word2vec(model_name="Word2Vec"):
+def train_word_embedding(model_name="Word2Vec"):
     # stopwords = utils.load_list("./Dataset/vi_stopwords.txt")
     train_dir = "./Dataset/Preprocess/Train"
 
@@ -46,6 +46,7 @@ def train_word2vec(model_name="Word2Vec"):
 
     # save model
     save_path = "./Model/{}/model_{}_{}_{}.bin".format(model_name, model_name, len(train_docs), model.iter)
+    utils.make_parent_dirs(save_path)
     model.save(save_path)
 
     word_vectors = model.wv
@@ -68,9 +69,9 @@ def train_word2vec(model_name="Word2Vec"):
 
 
 if __name__ == "__main__":
-    # model_name = "FastText"
-    model_name = "Word2Vec"
-    train_word2vec(model_name=model_name)
+    model_name = "FastText"
+    # model_name = "Word2Vec"
+    train_word_embedding(model_name=model_name)
 
     # # print(train_docs)
     # print("Training {} docs ...".format(len(train_docs)))
