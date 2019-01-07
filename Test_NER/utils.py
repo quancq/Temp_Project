@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 import math
+from sklearn.externals import joblib
 
 DEFAULT_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -213,6 +214,17 @@ def is_separate(start1, end1, start2, end2, max_overlap_rate=0.5):
 
     overlap_rate = overlap / (end1 - start1 + end2 - start2 + 2 - overlap)
     return overlap_rate <= max_overlap_rate
+
+
+def save_sklearn_model(model, save_path):
+    make_parent_dirs(save_path)
+    joblib.dump(model, save_path)
+    print("Save sklearn model to {} done".format(save_path))
+
+
+def load_sklearn_model(model_path):
+    model = joblib.load(model_path)
+    return model
 
 
 if __name__ == "__main__":
