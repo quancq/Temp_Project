@@ -3,7 +3,8 @@ import pandas as pd
 import numpy as np
 from eda import DatasetManager
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.model_selection import cross_validate, cross_val_score
+from sklearn.model_selection import cross_validate, cross_val_score, cross_val_predict
+from sklearn.metrics import classification_report
 import time
 
 
@@ -41,6 +42,7 @@ class MemoryTagger(BaseEstimator, TransformerMixin):
 
 
 if __name__ == "__main__":
+    start_time = time.time()
     dataset_path = "../Dataset/entity-annotated-corpus/ner_dataset.csv"
     dm = DatasetManager(dataset_path=dataset_path)
     words, tags = dm.words, dm.tags
@@ -51,7 +53,7 @@ if __name__ == "__main__":
     # utils.save_sklearn_model(tagger, model_path)
     # tagger = utils.load_sklearn_model(model_path)
 
-    test_words, test_poses, test_tags = dm.sentences.get(1)
+    # test_words, test_poses, test_tags = dm.sentences.get(1)
     # print("Test_Words : ", test_words)
     # print("Test_Poses : ", test_poses)
     # print("Test_Tags : ", test_tags)
@@ -64,5 +66,15 @@ if __name__ == "__main__":
     # test_df = test_df[["Word", "Pos", "True_Tag", "Pred_Tag"]]
     # print(test_df)
 
-    scores = cross_validate(MemoryTagger(), X=words, y=tags, scoring=["f1_macro"], cv=5, n_jobs=-1)
-    print(scores["test_f1_macro"])
+    scoring = ["f1_macro", "precision_macro", "recall_macro"]
+    scores = cross_validate(MemoryTagger(), X=words, y=tags, scoring=scoring, cv=5, n_jobs=-1)
+    print("f1_macro        : ", np.mean(scores["test_f1_macro"]))
+    print("precision_marco : ", np.mean(scores["test_precision_macro"]))
+    print("recall_macro    : ", np.mean(scores["test_recall_macro"]))
+
+    # pred_tags = cross_val_predict(MemoryTagger(), X=words, y=tags, cv=5, n_jobs=-1)
+    # report = classification_report(y_true=tags, y_pred=pred_tags)
+    # print(report)
+
+    exec_time = time.time() - start_time
+    print("Exec Time : {:.2f} seconds".format(exec_time))
