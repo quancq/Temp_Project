@@ -5,12 +5,12 @@ import time
 
 
 class DatasetManager:
-    def __init__(self, dataset_path="./Dataset/data.json"):
+    def __init__(self, dataset_path="./Dataset/data.json", data_size=1000):
         self.dataset_path = dataset_path
         if dataset_path.endswith(".csv"):
             self.load_csv_data()
         elif dataset_path.endswith(".json"):
-            self.load_json_data()
+            self.load_json_data(size=data_size)
         else:
             print("Dataset path {} is not valid".format(dataset_path))
 
@@ -58,10 +58,22 @@ class DatasetManager:
         exec_time = time.time() - start_time
         print("Load data done. Time {:.2f} seconds".format(exec_time))
 
-    def load_json_data(self):
+    def load_json_data(self, size=1000):
         start_time = time.time()
         self.sentences = utils.load_json(self.dataset_path)
+        # print(self.sentences.keys())
+        for k in range(size, len(self.sentences)):
+            self.sentences.pop(str(k), None)
         print("Number sentences    : ", len(self.sentences))
+
+        poses, tags = [], []
+        for sent in self.sentences.values():
+            for word, pos, tag in sent:
+                poses.append(pos)
+                tags.append(tag)
+
+        self.poses = list(set(poses))
+        self.tags = list(set(tags))
 
         exec_time = time.time() - start_time
         print("Load data done. Time {:.2f} seconds".format(exec_time))

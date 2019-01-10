@@ -1,3 +1,8 @@
+from collections import Counter
+
+import eli5
+import scipy
+
 import utils
 from eda import DatasetManager
 import numpy as np
@@ -65,14 +70,18 @@ def sent2tokens(sent):
     return [token for token, postag, label in sent]
 
 
+def print_transitions(trans_features):
+    for (label_from, label_to), weight in trans_features:
+        print("%-6s -> %-7s %0.6f" % (label_from, label_to, weight))
+
+
 def main():
-    dm = DatasetManager(dataset_path="../Dataset/data.json")
+    dm = DatasetManager(dataset_path="../Dataset/data.json", data_size=5000)
     sentences = list(dm.sentences.values())
     sent_len = len(sentences)
     train_size = int(sent_len * 0.8)
     print('Num Train size : ', train_size)
     print('Num Test size : ', (sent_len - train_size))
-
     train_sents = sentences[:train_size]
     test_sents = sentences[train_size:]
     X_train = [sent2features(sent) for sent in train_sents]
@@ -80,20 +89,51 @@ def main():
     X_test = [sent2features(sent) for sent in test_sents]
     y_test = [sent2labels(sent) for sent in test_sents]
 
-    print("X_train size : ", len(X_train))
-    print("X_test size : ", len(X_test))
+    # print("X_train size : ", len(X_train))
+    # print("X_test size : ", len(X_test))
 
     start_time = time.time()
-    crf = CRF(algorithm='lbfgs',
-              c1=0.1,
-              c2=0.1,
-              max_iterations=100,
-              all_possible_transitions=True)
-    crf.fit(X_train, y_train)
-    labels = list(crf.classes_)
-    labels.remove('O')
+    # crf = CRF(algorithm='lbfgs',
+    #           c1=0.1,
+    #           c2=0.1,
+    #           max_iterations=100,
+    #           all_possible_transitions=True)
+    # crf.fit(X_train, y_train)
 
-    y_pred = crf.predict(X_test)
+    crf = CRF(
+        algorithm='lbfgs',
+        max_iterations=100,
+        all_possible_transitions=True
+    )
+    labels = list(dm.tags)
+    labels.remove('O')
+    print("Number Tags: ", len(labels))
+    params_space = {
+        'c1': scipy.stats.expon(scale=0.5),
+        'c2': scipy.stats.expon(scale=0.05),
+    }
+
+    # use the same metric for evaluation
+    f1_scorer = make_scorer(metrics.flat_f1_score,
+                            average='weighted', labels=labels)
+
+    # search
+    rs = RandomizedSearchCV(crf, params_space,
+                            cv=2,
+                            verbose=1,
+                            n_jobs=-1,
+                            n_iter=5,
+                            scoring=f1_scorer,
+                            random_state=7)
+    rs.fit(X_train, y_train)
+    rs_path = "./Archive_Models/rs_crf.model"
+    utils.save_sklearn_model(rs, rs_path)
+    rs = utils.load_sklearn_model(rs_path)
+    print('best params:', rs.best_params_)
+    print('best CV score:', rs.best_score_)
+    print('model size: {:0.2f}M'.format(rs.best_estimator_.size_ / 1000000))
+
+    y_pred = rs.predict(X_test)
     macro_score = flat_f1_score(y_test, y_pred, average='macro', labels=labels)
     micro_score = flat_f1_score(y_test, y_pred, average='micro', labels=labels)
     weight_score = flat_f1_score(y_test, y_pred, average='weighted', labels=labels)
@@ -115,6 +155,15 @@ def main():
     print(metrics.flat_classification_report(
         y_test, y_pred, labels=sorted_labels, digits=3
     ))
+
+    print("Top likely transitions:")
+    print_transitions(Counter(rs.best_estimator_.transition_features_).most_common(20))
+
+    print("\nTop unlikely transitions:")
+    print_transitions(Counter(rs.best_estimator_.transition_features_).most_common()[-20:])
+
+    expl = eli5.explain_weights(rs.best_estimator_, top=10, targets=['O', 'B-per', 'I-per', 'B-geo', 'I-geo'])
+    print(eli5.format_as_text(expl))
 
     exec_time = time.time() - start_time
     print("\nExec Time : {:.2f} seconds".format(exec_time))
