@@ -105,3 +105,11 @@ def load_json(path):
 
     print("Load json data (size = {}) from {} done".format(len(data), path))
     return data
+
+
+def load_str(path):
+    data = ""
+    with open(path, 'r') as f:
+        data = f.read().strip()
+
+    return data
