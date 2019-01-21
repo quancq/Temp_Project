@@ -58,6 +58,33 @@ def get_all_file_paths(dir):
     return file_paths
 
 
+def get_file_paths(parent_dir):
+    file_paths = [os.path.join(parent_dir, file) for file in os.listdir(parent_dir)]
+    file_paths = [file_path for file_path in file_paths if os.path.isfile(file_path)]
+    return file_paths
+
+
+def get_all_file_names(dir):
+    file_names = []
+    for root, dirs, files in os.walk(dir):
+        # print(files)
+        file_names.extend(files)
+
+    return file_names
+
+
+def get_file_names(parent_dir):
+    file_names = [file_name for file_name in os.listdir(parent_dir)
+                  if os.path.isfile(os.path.join(parent_dir, file_name))]
+    return file_names
+
+
+def get_dir_names(parent_dir):
+    dir_names = [dir_name for dir_name in os.listdir(parent_dir)
+                 if os.path.isdir(os.path.join(parent_dir, dir_name))]
+    return dir_names
+
+
 def save_csv(df, save_path):
     make_parent_dirs(save_path)
 
@@ -88,8 +115,9 @@ def load_csv(path):
     try:
         data = pd.read_csv(path)
         print("Read csv data (size = {}) from {} done".format(data.shape[0], path))
-    except:
+    except Exception as e:
         print("Error when load csv data from ", path)
+        # print(e)
     return data
 
 
@@ -113,3 +141,9 @@ def load_str(path):
         data = f.read().strip()
 
     return data
+
+
+def save_str(input, path):
+    make_parent_dirs(path)
+    with open(path, 'w') as f:
+        f.write(input)
