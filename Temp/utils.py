@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 DEFAULT_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+from pyvi import ViTokenizer
 
 
 class MyEncoder(json.JSONEncoder):
@@ -147,3 +148,8 @@ def save_str(input, path):
     make_parent_dirs(path)
     with open(path, 'w') as f:
         f.write(input)
+
+
+def tokenize(input):
+    tokens = ViTokenizer.tokenize(input)
+    return tokens
