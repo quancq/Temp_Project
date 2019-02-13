@@ -185,7 +185,7 @@ def build_ner_dataset():
             ner_tag = ner_tag if len(ner_tag) > 0 else "O"
             ner_tags_of_doc.append(ner_tag)
 
-    data = pd.DataFrame(data, columns=["Doc_Id", "Sent_Id", "Token", "Post_Tag", "Ner_Tag"])
+    data = pd.DataFrame(data, columns=["Doc_Id", "Sent_Id", "Token", "Pos_Tag", "Ner_Tag"])
     print(data.head(10))
     print("\n==================")
     print(data.tail(10))

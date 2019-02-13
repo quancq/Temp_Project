@@ -1,4 +1,4 @@
-Doc_Id,Sent_Id,Token,Post_Tag,Ner_Tag
+Doc_Id,Sent_Id,Token,Pos_Tag,Ner_Tag
 1,1,-,F,O
 1,1,Gồm,V,O
 1,1,1,M,O
