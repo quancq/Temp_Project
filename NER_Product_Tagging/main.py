@@ -1,6 +1,7 @@
 import utils
 import pandas as pd
 import os, json, time
+import math
 import re
 from pyvi import ViPosTagger
 
@@ -57,25 +58,51 @@ def old_main():
     print("Time : {:.2f} seconds".format(exec_time))
 
 
+def get_candidate_tokens(product_name, tokens):
+    p = re.compile("[(),?!.-]+")
+    # candidate_tokens = [t for t in tokens if t.replace("_", " ") in product_name and not p.search(t)]
+    candidate_ids = []
+    candidate_tokens = []
+
+    for id, t in enumerate(tokens):
+        if t.replace("_", " ").lower() in product_name.lower() and not p.search(t) and id not in candidate_ids:
+            candidate_tokens.append(t)
+            candidate_ids.append(id)
+
+    return candidate_tokens, candidate_ids
+
+
 def main():
     start_time = time.time()
     input_dir = "./Data/input"
-    fnames = utils.get_file_names(input_dir)
+    # fnames = utils.get_file_names(input_dir)
 
     num_products = 0
-    doc_by_lines = []
+    full_doc = []
     tag_result_by_lines = []
-    num_output_files = 0
+    # num_output_files = 0
 
-    for fname_id, fname in enumerate(fnames):
-        fpath = os.path.join(input_dir, fname)
-        df = utils.load_csv(fpath)
+    df = utils.load_csvs_in_dir(input_dir)
+    root_ids = list(set(df["Root Id"].values.tolist()))
+    print("Root Ids : ", root_ids)
 
-        df = df.loc[df["Root Id"] == 16]
+    # for fname_id, fname in enumerate(fnames):
+    #     fpath = os.path.join(input_dir, fname)
+    #     df = utils.load_csv(fpath)
+    #
+    #     df = df.loc[df["Root Id"] == 16]
 
-        for i, row in df.iterrows():
+    for root_id in root_ids:
+        sub_df = df[df["Root Id"] == root_id]
+        sub_df = sub_df.sort_values("Model")
+        step = int(math.ceil(sub_df.shape[0] / 500))
+        sub_df = sub_df[::step].reset_index()
+        print("Process Root Id : {} - Number products : {}".format(root_id, sub_df.shape[0]))
+        full_doc, tag_result_by_lines = ["<Products>"], ["<Products>"]
+        for i, row in sub_df.iterrows():
             num_products += 1
             product_name = row["Model"]
+            product_name = " ".join(utils.tokenize(product_name)).replace("_", " ")
             cat = row["Category"]
             brand = "" if utils.isnan(row["Brand"]) else str(row["Brand"])
             doc = row["Info"]
@@ -83,39 +110,65 @@ def main():
             # ner_cats, ner_brands, ner_models, ner_info = [], [], [], []
 
             tokens = utils.tokenize(doc)
-            tokens = [token + "," for token in tokens]
-            doc_by_lines.append("\n<Product id='{}'>".format(num_products))
-            doc_by_lines.extend(tokens)
-            doc_by_lines.append("</Product>")
+            # tokens = [token + "," for token in tokens]
+            full_doc.append("\n<Product id='{}'>".format(num_products))
+            full_doc.append("<Full_Name><![CDATA[{}]]></Full_Name>".format(product_name))
+            full_doc.append("<Doc><![CDATA[{}]]></Doc>".format(" ".join(tokens)))
+            full_doc.append("</Product>")
 
             tag_result_by_lines.append("\n<Product id='{}' full_name='{}'>".format(num_products, product_name))
-            tag_result_by_lines.append("<Brand>")
-            tag_result_by_lines.append(brand)
-            tag_result_by_lines.append("</Brand>")
+            tag_result_by_lines.append("<Ner_Tag Brand='' Category='' Model='' Info=''></Ner_Tag>")
+            tag_result_by_lines.append("<Brand>{}</Brand>".format(brand))
 
-            tag_result_by_lines.append("<Category>")
-            tag_result_by_lines.extend(utils.tokenize(cat))
-            tag_result_by_lines.append("</Category>")
+            candidate_tokens, candidate_ids = get_candidate_tokens(product_name, tokens)
+            tag_result_by_lines.append("<Tokens>")
+            for t, token_id in zip(candidate_tokens, candidate_ids):
+                prefix = " ".join(tokens[token_id - 4: token_id])[:20]
+                suffix = " ".join(tokens[token_id + 1: token_id + 5])[:20]
+                # context = " ".join(tokens[token_id - 3: token_id + 4])
+                context = "{} {} {}".format(prefix, t, suffix)
+                context = "{message:{fill}{align}{width}}".format(message=context, width=70, fill="_", align="<")
+                tag_result_by_lines.append("{}, {}, {} ,".format(context, token_id, t))
 
-            tag_result_by_lines.append("<Model>")
-            tag_result_by_lines.append("</Model>")
+                # tag_result_by_lines.append("\n<Token>")
+                # tag_result_by_lines.append("<Text Ner_Tag=''><![CDATA[{:^20s}]]></Text>".format(t))
+                # tag_result_by_lines.append("<Context><![CDATA[{}]]></Context>".format(context))
+                # tag_result_by_lines.append("</Token>")
+                # tag_result_by_lines.append("<Token prefix='{:20s}'    text='{:20s}'    ner_tag=''    "
+                #                            "suffix='{:20s}'></Token>".format(prefix, t, suffix))
+            tag_result_by_lines.append("</Tokens>")
 
-            tag_result_by_lines.append("<Info>")
-            tag_result_by_lines.append("</Info>")
+            # tag_result_by_lines.append(brand)
+            # tag_result_by_lines.append("</Brand>")
+
+            # tag_result_by_lines.append("<Category>")
+            # tag_result_by_lines.extend(utils.tokenize(cat))
+            # tag_result_by_lines.append("</Category>")
+            #
+            # tag_result_by_lines.append("<Model>")
+            # tag_result_by_lines.append("</Model>")
+            #
+            # tag_result_by_lines.append("<Info>")
+            # tag_result_by_lines.append("</Info>")
 
             tag_result_by_lines.append("</Product>")
 
-            if (num_products % 100) == 0:
-                num_output_files += 1
-                save_path = "./Data/output/Doc_by_lines/doc_{}".format(num_output_files)
-                utils.save_list(doc_by_lines, save_path)
-                save_path = "./Data/output/Tag_Result/doc_{}".format(num_output_files)
-                utils.save_list(tag_result_by_lines, save_path)
+            if (i+1) % 100 == 0:
+                print("Process {}/{} products done".format(i+1, sub_df.shape[0]))
 
-                doc_by_lines, tag_result_by_lines = [], []
-                break
+        # if (num_products % 100) == 0:
+        # num_output_files += 1
+        save_path = "./Data/output/Full_Doc/{}.xml".format(root_id)
+        full_doc.append("</Products>")
+        utils.save_list(full_doc, save_path)
+        save_path = "./Data/output/Tag_Result/{}.xml".format(root_id)
+        tag_result_by_lines.append("</Products>")
+        utils.save_list(tag_result_by_lines, save_path)
 
-        print("Process {}/{} files done".format(fname_id + 1, len(fnames)))
+        # doc_by_lines, tag_result_by_lines = [], []
+            # break
+
+        # print("Process {}/{} files done".format(fname_id + 1, len(fnames)))
 
     exec_time = time.time() - start_time
     print("Time : {:.2f} seconds".format(exec_time))
@@ -196,4 +249,5 @@ def build_ner_dataset():
 
 
 if __name__ == "__main__":
-    build_ner_dataset()
+    main()
+    # build_ner_dataset()
