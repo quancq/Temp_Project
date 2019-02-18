@@ -72,6 +72,38 @@ def get_candidate_tokens(product_name, tokens):
     return candidate_tokens, candidate_ids
 
 
+def generate_json_full_doc():
+    input_dir = "./Data/input"
+    num_products = 0
+
+    df = utils.load_csvs_in_dir(input_dir)
+    root_ids = list(set(df["Root Id"].values.tolist()))
+    print("Root Ids : ", root_ids)
+
+    for root_id in root_ids:
+        data = []
+        sub_df = df[df["Root Id"] == root_id]
+        sub_df = sub_df.sort_values("Model")
+        step = int(math.ceil(sub_df.shape[0] / 500))
+        sub_df = sub_df[::step].reset_index()
+        print("Process Root Id : {} - Number products : {}".format(root_id, sub_df.shape[0]))
+        for i, row in sub_df.iterrows():
+            num_products += 1
+            product_name = row["Model"]
+            product_name = " ".join(utils.tokenize(product_name)).replace("_", " ")
+            cat = row["Category"]
+            brand = "" if utils.isnan(row["Brand"]) else str(row["Brand"])
+            doc = row["Info"]
+
+            tokens = utils.tokenize(doc)
+
+            data.append(dict(product_id=num_products, brand=brand, doc=" ".join(tokens),
+                             full_name=product_name, category=cat))
+
+        save_path = "./Data/output/Full_Doc_Json/{}".format(root_id)
+        utils.save_json(data, save_path)
+
+
 def main():
     start_time = time.time()
     input_dir = "./Data/input"
@@ -175,43 +207,76 @@ def main():
 
 
 def build_ner_dataset():
-    fpath = "./Data/output/Doc_by_lines/doc_1"
+
+    # Load full doc json
+    full_doc_dir = "./Data/output/Full_Doc_Json"
+    fpaths = utils.get_file_paths(full_doc_dir)
+    full_docs = []
+    for fpath in fpaths:
+        full_docs.extend(utils.load_json(fpath))
+
+    map_product_id_full_info = {str(product["product_id"]): product for product in full_docs}
+    # print(map_product_id_full_info.get("1901"))
+
+    fpath = "./Data/output/Tag_Result/16.xml"
     raw_lines = utils.load_str(fpath).split("\n")
     num_docs = 0
     max_docs = 20
     num_sents = 0
+    product_id = -1
 
-    tokens_of_doc = []
+    token_ids_of_doc = []
     ner_tags_of_doc = []
+    map_token_id_tag = {}
+
     data = []
-    p = re.compile("[?!.]+")
+    product_id_pattern = re.compile("(?<=id=').*(?=' full_name)")
+    end_sent_pattern = re.compile("[?!.]+")
+
     for line in raw_lines:
-        if line.startswith("<Product"):
-            tokens_of_doc = []
+        if line.startswith("<Product id"):
+            # print(line)
+            product_id = product_id_pattern.findall(line)[0]
+            # print(product_id)
+            token_ids_of_doc = []
             ner_tags_of_doc = []
+            map_token_id_tag = {}
 
         elif line.startswith("</Product>"):
+
+            if len(map_token_id_tag) == 0:
+                continue
+
             num_docs += 1
-            doc = " ".join(tokens_of_doc)
-            post_tags_of_doc = ViPosTagger.postagging(doc)[1]
+            doc = map_product_id_full_info[product_id]["doc"]
+
+            tokens_of_doc, post_tags_of_doc = ViPosTagger.postagging(doc)
+
+            full_ner_tags_of_doc = [map_token_id_tag.get(str(token_id), "O")
+                                    for token_id in range(len(tokens_of_doc))]
 
             # Assign sent id
             sent_ids = []
             is_end_sent = True
             for token in tokens_of_doc:
-                if p.search(token):
+                if end_sent_pattern.search(token):
                     is_end_sent = True
                 else:
                     if is_end_sent:
                         num_sents += 1
                     is_end_sent = False
                 sent_ids.append(num_sents)
+            # print(tokens_of_doc)
+            # print(map_token_id_tag)
+            # exit()
 
             for token_id in range(len(tokens_of_doc)):
-                sent_id, token, ner_tag, post_tag = sent_ids[token_id], tokens_of_doc[token_id], \
-                                                    ner_tags_of_doc[token_id], post_tags_of_doc[token_id]
+                sent_id, token, post_tag, ner_tag = sent_ids[token_id], tokens_of_doc[token_id], \
+                                                    post_tags_of_doc[token_id], full_ner_tags_of_doc[token_id]
+                # ner_tag = map_token_id_tag.get(str(token_id), "O")
+
                 if ner_tag != "O":
-                    if token_id > 0 and ner_tags_of_doc[token_id-1] == ner_tag \
+                    if token_id > 0 and full_ner_tags_of_doc[token_id-1] == ner_tag \
                             and sent_ids[token_id-1] == sent_ids[token_id]:
                         prefix = "I-"
                     else:
@@ -225,18 +290,25 @@ def build_ner_dataset():
                     ner_tag = prefix + ner_tag
                 data.append((num_docs, sent_id, token, post_tag, ner_tag))
 
-            if num_docs >= max_docs:
-                break
+            product_id = -1
 
+            # if num_docs >= max_docs:
+            #     break
+
+        elif line.startswith("<Tokens>") or line.startswith("</Tokens>") or \
+                line.startswith("<Products>") or line.startswith("</Products>") or \
+                line.startswith("<Ner_Tag>") or line.startswith("<Brand>"):
+            continue
         else:
-            idx = line.rfind(",")
-            token = line[:idx]
-            ner_tag = line[idx+1:]
-            if token == "":
+            arr = line[71:].split(",")
+            token_id = arr[0].strip()
+            ner_tag = arr[-1].strip()
+            if len(token_id) == 0 or len(ner_tag) == 0:
                 continue
-            tokens_of_doc.append(token)
-            ner_tag = ner_tag if len(ner_tag) > 0 else "O"
+            token_ids_of_doc.append(token_id)
+            # ner_tag = ner_tag if len(ner_tag) > 0 else "O"
             ner_tags_of_doc.append(ner_tag)
+            map_token_id_tag[token_id] = ner_tag
 
     data = pd.DataFrame(data, columns=["Doc_Id", "Sent_Id", "Token", "Pos_Tag", "Ner_Tag"])
     print(data.head(10))
@@ -244,10 +316,10 @@ def build_ner_dataset():
     print(data.tail(10))
     print(data.shape[0])
 
-    save_path = "./Data/Ner_Dataset/ner.csv"
+    save_path = "./Data/Ner_Dataset_2/ner.csv"
     utils.save_csv(data, save_path)
 
 
 if __name__ == "__main__":
-    main()
-    # build_ner_dataset()
+    # main()
+    build_ner_dataset()
