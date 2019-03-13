@@ -118,10 +118,10 @@ def save_json(data, save_path, mode="w"):
     print("Save json data (size = {}) to {} done".format(len(data), save_path))
 
 
-def load_csv(path):
+def load_csv(path, **kwargs):
     data = None
     try:
-        data = pd.read_csv(path)
+        data = pd.read_csv(path, **kwargs)
         print("Read csv data (size = {}) from {} done".format(data.shape[0], path))
     except:
         print("Error when load csv data from ", path)
@@ -175,6 +175,19 @@ def load_str(path):
     data = ""
     with open(path, 'r') as f:
         data = f.read().strip()
+
+    return data
+
+
+def save_str(data, path):
+    try:
+        make_parent_dirs(path)
+        with open(path, 'w') as f:
+            f.write(data)
+        print("Save str to {} done".format(path))
+
+    except:
+        print("Error when save str to ", path)
 
     return data
 
